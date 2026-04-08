@@ -302,29 +302,19 @@ textarea{resize:vertical;min-height:54px;}
     <div class="page" id="pg-estoque">
       <div class="fb" id="estoque-filtros">
         <button class="fbtn on" onclick="fE('todos',this)">Todos</button>
-        <button class="fbtn" onclick="fE('PlayStation',this)">PlayStation</button>
-        <button class="fbtn" onclick="fE('Xbox',this)">Xbox</button>
-        <button class="fbtn" onclick="fE('Nintendo',this)">Nintendo</button>
-        <button class="fbtn" onclick="fE('iPhone',this)">iPhone</button>
-        <button class="fbtn" onclick="fE('Apple Watch',this)">Apple Watch</button>
-        <button class="fbtn" onclick="fE('iPad/MacBook',this)">iPad/Mac</button>
-        <button class="fbtn" onclick="fE('PC Gamer',this)">PC Gamer</button>
-        <button class="fbtn" onclick="fE('Outros',this)">Outros</button>
+        <span id="estoque-cat-btns"></span>
         <input type="text" id="estoque-busca" placeholder="Buscar produto..." oninput="renderEstoque()" style="background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:5px 12px;color:var(--tx);font-family:'DM Mono',monospace;font-size:10px;outline:none;width:160px;">
+        <button class="fbtn" onclick="abrirGerenciarCats()" style="margin-left:4px">⚙️ Categorias</button>
       </div>
       <div class="sec"><div class="sh"><div class="stit">PRODUTOS EM ESTOQUE</div><div class="badge" id="be">0</div></div><div class="tw"><table><thead><tr><th>Entrada</th><th>Produto</th><th>Categoria</th><th>N° Série</th><th>IMEI</th><th>Descrição</th><th>Custo</th><th>Fornecedor</th><th>Dias</th><th>Ações</th></tr></thead><tbody id="tbe"></tbody></table></div></div>
     </div>
 
     <!-- ACESSÓRIOS -->
     <div class="page" id="pg-acessorios">
-      <div class="fb">
+      <div class="fb" id="acc-filtros">
         <button class="fbtn on" onclick="fA('todos',this)">Todos</button>
-        <button class="fbtn" onclick="fA('Controle',this)">Controles</button>
-        <button class="fbtn" onclick="fA('Jogo',this)">Jogos</button>
-        <button class="fbtn" onclick="fA('Cabo',this)">Cabos</button>
-        <button class="fbtn" onclick="fA('Headset',this)">Headsets</button>
-        <button class="fbtn" onclick="fA('Carregador',this)">Carregadores</button>
-        <button class="fbtn" onclick="fA('Outro',this)">Outros</button>
+        <span id="acc-cat-btns"></span>
+        <button class="fbtn" onclick="abrirGerenciarCats('acc')" style="margin-left:4px">⚙️ Categorias</button>
       </div>
       <div class="acc-grid" id="accgrid"></div>
     </div>
@@ -375,7 +365,7 @@ textarea{resize:vertical;min-height:54px;}
         <div class="fg">
           <div class="fgr full"><label>Produto *</label><input id="fv-p" placeholder="Ex: iPhone 13 128GB Preto"></div>
           <div class="fgr"><label>Categoria</label>
-            <select id="fv-cat"><option value="">Selecione</option><option>PlayStation</option><option>Xbox</option><option>Nintendo</option><option>iPhone</option><option>Apple Watch</option><option>iPad/MacBook</option><option>PC Gamer</option><option>Acessório</option><option>Outros</option></select>
+            <select id="fv-cat" onchange="catChange(this,'prod')"><option value="">Selecione</option></select>
           </div>
           <div class="fgr"><label>Estado</label>
             <select id="fv-est"><option value="">Selecione</option><option>Novo / Lacrado</option><option>Excelente estado</option><option>Bom estado</option><option>Com detalhes</option><option>Defeito</option></select>
@@ -413,7 +403,7 @@ textarea{resize:vertical;min-height:54px;}
         <div class="fg">
           <div class="fgr full"><label>Produto *</label><input id="fe-p" placeholder="Ex: PlayStation 5 Mídia Física"></div>
           <div class="fgr"><label>Categoria</label>
-            <select id="fe-cat"><option value="">Selecione</option><option>PlayStation</option><option>Xbox</option><option>Nintendo</option><option>iPhone</option><option>Apple Watch</option><option>iPad/MacBook</option><option>PC Gamer</option><option>Acessório</option><option>Outros</option></select>
+            <select id="fe-cat" onchange="catChange(this,'prod')"><option value="">Selecione</option></select>
           </div>
           <div class="fgr"><label>Estado</label>
             <select id="fe-est"><option value="">Selecione</option><option>Novo / Lacrado</option><option>Excelente estado</option><option>Bom estado</option><option>Com detalhes</option><option>Defeito</option></select>
@@ -465,7 +455,7 @@ textarea{resize:vertical;min-height:54px;}
         <div class="fg">
           <div class="fgr full"><label>Nome do acessório *</label><input id="fa-p" placeholder="Ex: Controle PS5 DualSense Branco"></div>
           <div class="fgr"><label>Categoria</label>
-            <select id="fa-cat"><option value="Controle">Controle</option><option value="Jogo">Jogo</option><option value="Cabo">Cabo</option><option value="Headset">Headset</option><option value="Carregador">Carregador</option><option value="Outro">Outro</option></select>
+            <select id="fa-cat" onchange="catChange(this,'acc')"><option value="">Selecione</option></select>
           </div>
           <div class="fgr"><label>Plataforma / Marca</label><input id="fa-marca" placeholder="Ex: PS5, Xbox, Universal..."></div>
           <div class="fgr"><label>Modo de estoque</label>
@@ -573,6 +563,123 @@ function svInd(){var el=document.getElementById('svi');el.classList.add('show');
 function catDeVenda(p){var s=p.toUpperCase();if(s.indexOf('PLAYSTATION')>=0||s.indexOf('PS5')>=0||s.indexOf('PS4')>=0)return'PlayStation';if(s.indexOf('XBOX')>=0)return'Xbox';if(s.indexOf('SWITCH')>=0||s.indexOf('NINTENDO')>=0)return'Nintendo';if(s.indexOf('IPHONE')>=0)return'iPhone';if(s.indexOf('APPLE WATCH')>=0)return'Apple Watch';if(s.indexOf('IPAD')>=0||s.indexOf('MACBOOK')>=0)return'iPad/MacBook';if(s.indexOf('PC')>=0||s.indexOf('GAMER')>=0)return'PC Gamer';return'Outros';}
 window.mCPF=mCPF; window.bCEP=bCEP;
 
+
+// ── CATEGORIAS DINÂMICAS ─────────────────────────────────────────
+var CAT_KEY_PROD = 'nx_cats_prod';
+var CAT_KEY_ACC  = 'nx_cats_acc';
+var DEFAULT_CATS_PROD = ['PlayStation','Xbox','Nintendo','iPhone','Apple Watch','iPad/MacBook','PC Gamer','Acessório','Outros'];
+var DEFAULT_CATS_ACC  = ['Controle','Jogo','Cabo','Headset','Carregador','Outro'];
+var _catTipo = 'prod'; // qual tipo está sendo gerenciado
+
+function getCats(tipo) {
+  var key = tipo === 'acc' ? CAT_KEY_ACC : CAT_KEY_PROD;
+  var def = tipo === 'acc' ? DEFAULT_CATS_ACC : DEFAULT_CATS_PROD;
+  try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : def.slice(); } catch(e) { return def.slice(); }
+}
+function saveCats(tipo, cats) {
+  var key = tipo === 'acc' ? CAT_KEY_ACC : CAT_KEY_PROD;
+  localStorage.setItem(key, JSON.stringify(cats));
+}
+function populateCatSelect(id, tipo, valorAtual) {
+  var sel = document.getElementById(id);
+  if (!sel) return;
+  var cats = getCats(tipo);
+  var html = '<option value="">Selecione</option>';
+  cats.forEach(function(c) { html += '<option value="' + c + '"' + (c === valorAtual ? ' selected' : '') + '>' + c + '</option>'; });
+  html += '<option value="__nova__">➕ Nova categoria...</option>';
+  sel.innerHTML = html;
+}
+function populateAllCatSelects() {
+  populateCatSelect('fv-cat', 'prod');
+  populateCatSelect('fe-cat', 'prod');
+  populateCatSelect('fa-cat', 'acc');
+}
+function catChange(sel, tipo) {
+  if (sel.value === '__nova__') {
+    var nome = prompt('Nome da nova categoria:');
+    if (nome && nome.trim()) {
+      var cats = getCats(tipo);
+      nome = nome.trim();
+      if (cats.indexOf(nome) < 0) { cats.push(nome); saveCats(tipo, cats); }
+      populateCatSelect(sel.id, tipo, nome);
+      renderCatFiltros();
+      toast('Categoria "' + nome + '" adicionada!');
+    } else {
+      sel.value = '';
+    }
+  }
+}
+function renderCatFiltros() {
+  var prodCats = getCats('prod');
+  var btnsProd = document.getElementById('estoque-cat-btns');
+  if (btnsProd) {
+    btnsProd.innerHTML = '';
+    prodCats.forEach(function(c) {
+      var b = document.createElement('button');
+      b.className = 'fbtn';
+      b.textContent = c;
+      b.onclick = function() { fE(c, b); };
+      btnsProd.appendChild(b);
+    });
+  }
+  var accCats = getCats('acc');
+  var btnsAcc = document.getElementById('acc-cat-btns');
+  if (btnsAcc) {
+    btnsAcc.innerHTML = '';
+    accCats.forEach(function(c) {
+      var b = document.createElement('button');
+      b.className = 'fbtn';
+      b.textContent = c;
+      b.onclick = function() { fA(c, b); };
+      btnsAcc.appendChild(b);
+    });
+  }
+}
+window.abrirGerenciarCats = function(tipo) {
+  _catTipo = tipo || 'prod';
+  document.getElementById('mm-cats-tit').textContent = _catTipo === 'acc' ? 'Categorias de Acessórios' : 'Categorias de Produtos';
+  renderListaCats();
+  document.getElementById('mm-cats').classList.add('open');
+};
+function renderListaCats() {
+  var cats = getCats(_catTipo);
+  var lista = document.getElementById('cats-lista');
+  if (!cats.length) { lista.innerHTML = '<div class="empty">Nenhuma categoria</div>'; return; }
+  lista.innerHTML = cats.map(function(c, i) {
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;margin-bottom:6px;">'
+      + '<span style="font-size:11px">' + c + '</span>'
+      + '<button class="btn bdan bsm" onclick="removerCat(' + i + ')">✕ Remover</button>'
+      + '</div>';
+  }).join('');
+}
+window.adicionarCat = function() {
+  var inp = document.getElementById('nova-cat-inp');
+  var nome = (inp.value || '').trim();
+  if (!nome) { toast('Digite o nome da categoria!', true); return; }
+  var cats = getCats(_catTipo);
+  if (cats.indexOf(nome) >= 0) { toast('Categoria já existe!', true); return; }
+  cats.push(nome);
+  saveCats(_catTipo, cats);
+  inp.value = '';
+  renderListaCats();
+  renderCatFiltros();
+  populateAllCatSelects();
+  toast('Categoria "' + nome + '" adicionada!');
+};
+window.removerCat = function(idx) {
+  var cats = getCats(_catTipo);
+  var nome = cats[idx];
+  cats.splice(idx, 1);
+  saveCats(_catTipo, cats);
+  renderListaCats();
+  renderCatFiltros();
+  populateAllCatSelects();
+  toast('Categoria "' + nome + '" removida!');
+};
+window.catChange = catChange;
+window.populateAllCatSelects = populateAllCatSelects;
+window.renderCatFiltros = renderCatFiltros;
+
 // ── MESES ────────────────────────────────────────────────────────
 var MN=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var M26=['2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
@@ -603,7 +710,7 @@ async function iniciar(){
   }
 }
 
-function escutar(){
+function escutar(){renderCatFiltros();
   onSnapshot(collection(db,'vendas'),function(s){vendas=s.docs.map(function(d){return Object.assign({fid:d.id},d.data());});atualizar();});
   onSnapshot(collection(db,'estoque'),function(s){estoque=s.docs.map(function(d){return Object.assign({fid:d.id},d.data());});atualizar();});
   onSnapshot(collection(db,'clientes'),function(s){clientes=s.docs.map(function(d){return Object.assign({fid:d.id},d.data());});atualizar();});
@@ -864,17 +971,38 @@ function renderV(f){
   if(f==='lucro')lista=lista.filter(function(v){return(Number(v.venda)-Number(v.custo))>0;});
   if(f==='prej')lista=lista.filter(function(v){return(Number(v.venda)-Number(v.custo))<0;});
   document.getElementById('bv').textContent=lista.length+' vendas';
-  document.getElementById('tbv').innerHTML=lista.length?lista.map(function(v){
-    var ps=v.produto.replace(/'/g,"\\'").replace(/"/g,'&quot;');
-    return'<tr><td style="font-size:10px;color:var(--mu);white-space:nowrap">'+fD(v.entrada)+'</td><td style="font-size:10px;color:var(--mu);white-space:nowrap">'+(v.saida?fD(v.saida):'<span class="chip cha">Estoque</span>')+'</td><td style="color:var(--ac2);font-size:11px;max-width:120px">'+v.produto+'</td><td><span class="chip chx" style="font-size:9px">'+(v.categoria||catDeVenda(v.produto))+'</span></td><td style="font-size:10px;color:var(--mu)">'+(v.serie||'—')+'</td><td style="font-size:10px;color:var(--mu)">'+(v.imei||'—')+'</td><td style="font-size:11px">'+(v.comprador||'—')+'</td><td style="color:var(--mu)">'+R(v.custo)+'</td><td>'+R(v.venda)+'</td><td>'+cL(Number(v.venda)-Number(v.custo))+'</td><td>'+cP(v.pagamento)+'</td><td><div class="ag"><button class="btn bgst bsm" onclick="editV(\''+v.fid+'\')">✏️</button><button class="btn bdan bsm" onclick="delConf(\'vendas\',\''+v.fid+'\',\''+ps+'\')">🗑</button></div></td></tr>';
-  }).join(''):'<tr><td colspan="12" class="empty">Nenhuma venda no período</td></tr>';
+  var tbody=document.getElementById('tbv');
+  tbody.innerHTML='';
+  if(!lista.length){
+    tbody.innerHTML='<tr><td colspan="12" class="empty">Nenhuma venda no período</td></tr>';
+    return;
+  }
+  lista.forEach(function(v){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td style="font-size:10px;color:var(--mu);white-space:nowrap">'+fD(v.entrada)+'</td>'
+      +'<td style="font-size:10px;color:var(--mu);white-space:nowrap">'+(v.saida?fD(v.saida):'<span class="chip cha">Estoque</span>')+'</td>'
+      +'<td style="color:var(--ac2);font-size:11px;max-width:120px">'+(v.produto||'')+'</td>'
+      +'<td><span class="chip chx" style="font-size:9px">'+(v.categoria||catDeVenda(v.produto||''))+'</span></td>'
+      +'<td style="font-size:10px;color:var(--mu)">'+(v.serie||'—')+'</td>'
+      +'<td style="font-size:10px;color:var(--mu)">'+(v.imei||'—')+'</td>'
+      +'<td style="font-size:11px">'+(v.comprador||'—')+'</td>'
+      +'<td style="color:var(--mu)">'+R(v.custo)+'</td>'
+      +'<td>'+R(v.venda)+'</td>'
+      +'<td>'+cL(Number(v.venda)-Number(v.custo))+'</td>'
+      +'<td>'+cP(v.pagamento)+'</td>'
+      +'<td><div class="ag"><button class="btn bgst bsm">✏️</button><button class="btn bdan bsm">🗑</button></div></td>';
+    var btns=tr.querySelectorAll('button');
+    btns[0].onclick=function(){window.editV(v.fid);};
+    btns[1].onclick=function(){delConf('vendas',v.fid,v.produto||'');};
+    tbody.appendChild(tr);
+  });
 }
 window.fV=function(f,btn){document.querySelectorAll('#pg-vendas .fbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');renderV(f);};
 window.editV=function(fid){
   var v=vendas.find(function(x){return x.fid===fid;});if(!v)return;
   abrirModal('venda');editando=true;editId=fid;editTipo='venda';
   document.getElementById('mtit').textContent='Editar Venda';
-  document.getElementById('fv-p').value=v.produto||'';document.getElementById('fv-cat').value=v.categoria||'';
+  document.getElementById('fv-p').value=v.produto||'';populateCatSelect('fv-cat','prod',v.categoria||'');
   document.getElementById('fv-est').value=v.estado||'';document.getElementById('fv-serie').value=v.serie||'';
   document.getElementById('fv-imei').value=v.imei||'';document.getElementById('fv-desc').value=v.descricao||'';
   document.getElementById('fv-en').value=v.entrada||'';document.getElementById('fv-sa').value=v.saida||'';
@@ -887,16 +1015,36 @@ window.editV=function(fid){
 
 // ── ESTOQUE ──────────────────────────────────────────────────────
 function renderEstoque(){
-  var busca=(document.getElementById('estoque-busca').value||'').toLowerCase().trim();
+  var busca=(document.getElementById('estoque-busca')?document.getElementById('estoque-busca').value||'':'').toLowerCase().trim();
   var lista=estoque;
-  if(filtE!=='todos')lista=lista.filter(function(e){return(e.categoria||catDeVenda(e.produto))===filtE;});
-  if(busca)lista=lista.filter(function(e){return e.produto.toLowerCase().indexOf(busca)>=0;});
+  if(filtE!=='todos')lista=lista.filter(function(e){return(e.categoria||catDeVenda(e.produto||''))===filtE;});
+  if(busca)lista=lista.filter(function(e){return(e.produto||'').toLowerCase().indexOf(busca)>=0;});
   document.getElementById('be').textContent=lista.length+' itens';
-  document.getElementById('tbe').innerHTML=lista.length?lista.map(function(e){
-    var ps=e.produto.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  var tbody=document.getElementById('tbe');
+  tbody.innerHTML='';
+  if(!lista.length){
+    tbody.innerHTML='<tr><td colspan="10" class="empty">Nenhum item encontrado</td></tr>';
+    return;
+  }
+  lista.forEach(function(e){
     var dias=diasP(e.entrada);
-    return'<tr><td style="font-size:10px;color:var(--mu)">'+fD(e.entrada)+'</td><td style="color:var(--ac2);font-size:11px">'+e.produto+'</td><td><span class="chip chx" style="font-size:9px">'+(e.categoria||catDeVenda(e.produto))+'</span></td><td style="font-size:10px;color:var(--mu)">'+(e.serie||'—')+'</td><td style="font-size:10px;color:var(--mu)">'+(e.imei||'—')+'</td><td style="font-size:10px;color:var(--mu);max-width:140px">'+(e.descricao||'—')+'</td><td style="color:var(--am)">'+R(e.custo)+'</td><td style="font-size:10px">'+(e.fornecedor||'—')+'</td><td>'+cD(dias)+'</td><td><div class="ag"><button class="btn bgst bsm" onclick="editE(\''+e.fid+'\')">✏️</button><button class="btn bsuc bsm" onclick="mvV(\''+e.fid+'\')">→ Vender</button><button class="btn bdan bsm" onclick="delConf(\'estoque\',\''+e.fid+'\',\''+ps+'\')">🗑</button></div></td></tr>';
-  }).join(''):'<tr><td colspan="10" class="empty">Nenhum item encontrado</td></tr>';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td style="font-size:10px;color:var(--mu)">'+fD(e.entrada)+'</td>'
+      +'<td style="color:var(--ac2);font-size:11px">'+(e.produto||'')+'</td>'
+      +'<td><span class="chip chx" style="font-size:9px">'+(e.categoria||catDeVenda(e.produto||''))+'</span></td>'
+      +'<td style="font-size:10px;color:var(--mu)">'+(e.serie||'—')+'</td>'
+      +'<td style="font-size:10px;color:var(--mu)">'+(e.imei||'—')+'</td>'
+      +'<td style="font-size:10px;color:var(--mu);max-width:140px">'+(e.descricao||'—')+'</td>'
+      +'<td style="color:var(--am)">'+R(e.custo)+'</td>'
+      +'<td style="font-size:10px">'+(e.fornecedor||'—')+'</td>'
+      +'<td>'+cD(dias)+'</td>'
+      +'<td><div class="ag"><button class="btn bgst bsm">✏️</button><button class="btn bsuc bsm">→ Vender</button><button class="btn bdan bsm">🗑</button></div></td>';
+    var btns=tr.querySelectorAll('button');
+    btns[0].onclick=function(){window.editE(e.fid);};
+    btns[1].onclick=function(){window.mvV(e.fid);};
+    btns[2].onclick=function(){delConf('estoque',e.fid,e.produto||'');};
+    tbody.appendChild(tr);
+  });
 }
 window.fE=function(f,btn){document.querySelectorAll('#pg-estoque .fbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');filtE=f;renderEstoque();};
 window.renderEstoque=renderEstoque;
@@ -904,7 +1052,7 @@ window.editE=function(fid){
   var e=estoque.find(function(x){return x.fid===fid;});if(!e)return;
   abrirModal('estoque');editando=true;editId=fid;editTipo='estoque';
   document.getElementById('mtit').textContent='Editar Estoque';
-  document.getElementById('fe-p').value=e.produto||'';document.getElementById('fe-cat').value=e.categoria||'';
+  document.getElementById('fe-p').value=e.produto||'';populateCatSelect('fe-cat','prod',e.categoria||'');
   document.getElementById('fe-est').value=e.estado||'';document.getElementById('fe-serie').value=e.serie||'';
   document.getElementById('fe-imei').value=e.imei||'';document.getElementById('fe-en').value=e.entrada||'';
   document.getElementById('fe-cu').value=e.custo||'';document.getElementById('fe-fo').value=e.fornecedor||'';
@@ -928,12 +1076,30 @@ function renderA(f){
   if(f!=='todos')lista=lista.filter(function(a){return a.categoria===f;});
   var g=document.getElementById('accgrid');
   if(!lista.length){g.innerHTML='<div class="empty">Nenhum acessório cadastrado</div>';return;}
-  g.innerHTML=lista.map(function(a){
-    var qty=Number(a.quantidade||0);var qmin=Number(a.qtd_min||1);
+  g.innerHTML='';
+  lista.forEach(function(a){
+    var qty=Number(a.quantidade||0);
+    var qmin=Number(a.qtd_min||1);
     var cls=qty<=0?'out':qty<=qmin?'low':'ok';
     var st=qty<=0?'Sem estoque':qty<=qmin?'Estoque baixo':'OK';
-    return'<div class="acc-card"><div class="acc-name">'+a.produto+'</div><div class="acc-meta"><span class="chip chx" style="font-size:9px">'+a.categoria+'</span>'+(a.marca?' · '+a.marca:'')+'<br>Fornecedor: '+(a.fornecedor||'—')+'<br>'+(a.obs||'')+'</div><div class="acc-qty"><div class="acc-qty-val '+cls+'">'+qty+'</div><div style="font-size:10px;color:var(--mu)">un. · '+st+'</div></div><div class="acc-btns"><button class="qty-btn" onclick="adjQty(\''+a.fid+'\',-1)">−</button><button class="qty-btn" onclick="adjQty(\''+a.fid+'\',1)">+</button><button class="btn bgst bsm" onclick="editA(\''+a.fid+'\')">✏️</button><button class="btn bdan bsm" onclick="delConf(\'acessorios\',\''+a.fid+'\',\''+a.produto.replace(/'/g,"\\'").replace(/"/g,'&quot;')+'\')">🗑</button></div></div>';
-  }).join('');
+    var card=document.createElement('div');
+    card.className='acc-card';
+    card.innerHTML='<div class="acc-name">'+(a.produto||'')+'</div>'
+      +'<div class="acc-meta"><span class="chip chx" style="font-size:9px">'+a.categoria+'</span>'+(a.marca?' · '+a.marca:'')+'<br>Fornecedor: '+(a.fornecedor||'—')+'<br>'+(a.obs||'')+'</div>'
+      +'<div class="acc-qty"><div class="acc-qty-val '+cls+'">'+qty+'</div><div style="font-size:10px;color:var(--mu)">un. · '+st+'</div></div>'
+      +'<div class="acc-btns">'
+      +'<button class="qty-btn" title="Diminuir">−</button>'
+      +'<button class="qty-btn" title="Aumentar">+</button>'
+      +'<button class="btn bgst bsm">✏️</button>'
+      +'<button class="btn bdan bsm">🗑</button>'
+      +'</div>';
+    var btns=card.querySelectorAll('button');
+    btns[0].onclick=function(){window.adjQty(a.fid,-1);};
+    btns[1].onclick=function(){window.adjQty(a.fid,1);};
+    btns[2].onclick=function(){window.editA(a.fid);};
+    btns[3].onclick=function(){delConf('acessorios',a.fid,a.produto||'');};
+    g.appendChild(card);
+  });
 }
 window.fA=function(f,btn){document.querySelectorAll('#pg-acessorios .fbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');renderA(f);};
 window.adjQty=async function(fid,delta){
@@ -946,7 +1112,7 @@ window.editA=function(fid){
   var a=acessorios.find(function(x){return x.fid===fid;});if(!a)return;
   abrirModal('acessorio');editando=true;editId=fid;editTipo='acessorio';
   document.getElementById('mtit').textContent='Editar Acessório';
-  document.getElementById('fa-p').value=a.produto||'';document.getElementById('fa-cat').value=a.categoria||'Controle';
+  document.getElementById('fa-p').value=a.produto||'';populateCatSelect('fa-cat','acc',a.categoria||'');
   document.getElementById('fa-marca').value=a.marca||'';document.getElementById('fa-modo').value=a.modo||'lote';
   document.getElementById('fa-qty').value=a.quantidade||0;document.getElementById('fa-qmin').value=a.qtd_min||1;
   document.getElementById('fa-cu').value=a.custo||'';document.getElementById('fa-fo').value=a.fornecedor||'';
@@ -979,8 +1145,10 @@ function abrirModal(aba){
   editando=false;editId=null;editTipo=null;window._rmE=null;
   document.getElementById('mtit').textContent='Adicionar';
   document.querySelectorAll('#mm input,#mm select,#mm textarea').forEach(function(el){el.value='';});
+  populateAllCatSelects();
+  renderCatFiltros();
   var t=aba||PAGE_TAB[curPage]||'venda';
-  swTab(t,document.querySelector('.mtbtn[onclick*="\''+t+'\'"]'));
+  var allTabs=document.querySelectorAll('.mtbtn'); var tabBtn=null; allTabs.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf("'"+t+"'")>=0)tabBtn=b;}); swTab(t,tabBtn);
   document.getElementById('mm').classList.add('open');
 }
 function fecharModal(){document.getElementById('mm').classList.remove('open');}
@@ -1101,5 +1269,22 @@ function atualizar(){
 
 iniciar();
 </script>
+
+<!-- MODAL GERENCIAR CATEGORIAS -->
+<div class="mo" id="mm-cats" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox" style="max-width:460px">
+    <div class="mhead"><div class="mtitle" id="mm-cats-tit">Gerenciar Categorias</div><button class="mclose" onclick="document.getElementById('mm-cats').classList.remove('open')">✕</button></div>
+    <div class="mbody">
+      <div class="fsec">Categorias atuais</div>
+      <div id="cats-lista" style="margin-bottom:14px"></div>
+      <div class="fsec">Adicionar nova categoria</div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <input id="nova-cat-inp" placeholder="Ex: Smartwatch, Drone, Notebook..." style="flex:1">
+        <button class="btn bpri" onclick="adicionarCat()">+ Adicionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
