@@ -271,6 +271,27 @@ textarea{resize:vertical;min-height:54px;}
 .notif-msg{font-size:11px;font-weight:500;margin-bottom:2px;}
 .notif-sub{font-size:10px;color:var(--mu);}
 .notif-empty{padding:20px;text-align:center;color:var(--mu);font-size:11px;}
+
+/* ── CONFIGURAÇÕES ──────────────────────────────────────── */
+.cfg-section{background:var(--sf);border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.cfg-sh{padding:11px 15px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
+.cfg-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--ac2);}
+.cfg-body{padding:14px 15px;}
+.cfg-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bd);gap:10px;}
+.cfg-row:last-child{border-bottom:none;}
+.cfg-lbl{font-size:10px;color:var(--mu);min-width:120px;}
+.cfg-val{font-size:11px;color:var(--tx);flex:1;}
+.cfg-edit-inp{background:var(--bg);border:1px solid var(--ac);border-radius:5px;padding:4px 8px;color:var(--tx);font-family:'DM Mono',monospace;font-size:11px;outline:none;flex:1;}
+.cfg-tag{display:inline-flex;align-items:center;gap:4px;background:var(--sf2);border:1px solid var(--bd);border-radius:20px;padding:3px 9px;font-size:10px;margin:2px;}
+.cfg-tag button{background:none;border:none;color:var(--mu);cursor:pointer;font-size:11px;padding:0 2px;}
+.cfg-tag button:hover{color:var(--rd);}
+/* ── CALCULADORA MELHORADA ──────────────────────────────── */
+.bandeira-sel{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.band-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;transition:all .15s;}
+.band-btn:hover,.band-btn.on{border-color:var(--ac);color:var(--ac2);background:var(--ac3);}
+.taxa-edit-btn{background:none;border:none;color:var(--mu);cursor:pointer;font-size:11px;padding:2px 5px;border-radius:4px;}
+.taxa-edit-btn:hover{color:var(--ac2);background:var(--sf2);}
+.calc-section-title{font-size:9px;letter-spacing:2px;color:var(--mu);text-transform:uppercase;margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--bd);}
 </style>
 </head>
 <body>
@@ -292,6 +313,7 @@ textarea{resize:vertical;min-height:54px;}
     <div class="ng">Pós-Venda</div>
     <div class="ni" onclick="navTo('followup')"><svg class="ico" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l3 2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg><span>Follow-up</span><span class="nib" id="nb">0</span></div>
     <div class="ng">Dados</div>
+    <div class="ni" onclick="navTo('config')"><svg class="ico" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a3 3 0 100 6 3 3 0 000-6z"/></svg><span>Configurações</span></div>
     <div class="ni" onclick="exportExcel()"><svg class="ico" viewBox="0 0 16 16" fill="currentColor"><path d="M9 1v5h5L9 1z"/><path d="M8 1H3a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V6H9V1z"/></svg><span>Exportar Excel</span></div>
   </nav>
   <div class="sfoot"><div>Mês: <span class="v" id="sf-m">Todos</span></div><div>Lucro: <span class="v" id="sf-l">R$ 0,00</span></div><div>Estoque: <span class="v" id="sf-e">0</span></div></div>
@@ -487,6 +509,64 @@ textarea{resize:vertical;min-height:54px;}
       </div>
     </div>
 
+
+    <!-- CONFIGURAÇÕES -->
+    <div class="page" id="pg-config">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <!-- COL 1 -->
+        <div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">🏪 INFORMAÇÕES DA LOJA</div></div>
+            <div class="cfg-body" id="cfg-loja-body"></div>
+          </div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">🎯 METAS</div><button class="btn bgst bsm" onclick="abrirMetas('mes')">Editar Metas</button></div>
+            <div class="cfg-body" id="cfg-metas-body"></div>
+          </div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">📦 CATEGORIAS DE PRODUTOS</div><button class="btn bgst bsm" onclick="abrirGerenciarCats('prod')">Gerenciar</button></div>
+            <div class="cfg-body" id="cfg-cats-prod-body"></div>
+          </div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">🎮 CATEGORIAS DE ACESSÓRIOS</div><button class="btn bgst bsm" onclick="abrirGerenciarCats('acc')">Gerenciar</button></div>
+            <div class="cfg-body" id="cfg-cats-acc-body"></div>
+          </div>
+        </div>
+        <!-- COL 2 -->
+        <div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">💳 TAXAS DA MAQUININHA</div><button class="btn bgst bsm" onclick="abrirEditarTaxas()">Editar Taxas</button></div>
+            <div class="cfg-body" id="cfg-taxas-body"></div>
+          </div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">📋 OPÇÕES DOS SELECTS</div></div>
+            <div class="cfg-body">
+              <div style="font-size:10px;color:var(--mu);margin-bottom:10px">Clique em qualquer seletor abaixo para personalizar suas opções:</div>
+              <div style="display:flex;flex-direction:column;gap:6px;" id="cfg-selects-list"></div>
+            </div>
+          </div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">🔧 CAMPOS PERSONALIZADOS</div></div>
+            <div class="cfg-body">
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button class="btn bgst" style="width:100%;justify-content:flex-start" onclick="abrirCampoCustom('pe')">📦 Encomendas — Adicionar campo</button>
+                <button class="btn bgst" style="width:100%;justify-content:flex-start" onclick="abrirCampoCustom('pc')">🔥 Compradores — Adicionar campo</button>
+                <button class="btn bgst" style="width:100%;justify-content:flex-start" onclick="abrirCampoCustom('pa')">📅 Agenda — Adicionar campo</button>
+              </div>
+            </div>
+          </div>
+          <div class="cfg-section">
+            <div class="cfg-sh"><div class="cfg-title">🗑 DADOS E RESET</div></div>
+            <div class="cfg-body">
+              <div style="font-size:10px;color:var(--mu);margin-bottom:10px;line-height:1.6">Atenção: estas ações não podem ser desfeitas.</div>
+              <button class="btn bgst" style="width:100%;margin-bottom:7px" onclick="exportExcel()">⬇️ Exportar todos os dados (Excel)</button>
+              <button class="btn bdan" style="width:100%" onclick="confirmarResetNotifs()">🔔 Limpar notificações lidas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- FOLLOW-UP -->
     <div class="page" id="pg-followup">
       <div class="fb">
@@ -662,7 +742,7 @@ textarea{resize:vertical;min-height:54px;}
   <div class="mbox">
     <div class="mhead">
       <div style="display:flex;align-items:center;gap:8px;"><div class="av" id="vm-av">?</div><div><div class="mtitle" id="vm-nm">—</div><div style="font-size:9px;color:var(--mu);margin-top:2px" id="vm-tp">—</div></div></div>
-      <div style="display:flex;gap:4px;"><button class="btn bgst bsm" onclick="editCli()">Editar</button><button class="mclose" onclick="document.getElementById('vm').classList.remove('open')">✕</button></div>
+      <div style="display:flex;gap:4px;"><button class="btn bgst bsm" onclick="editCli()">Editar</button><button class="btn bdan bsm" onclick="excluirClienteView()">🗑 Excluir</button><button class="mclose" onclick="document.getElementById('vm').classList.remove('open')">✕</button></div>
     </div>
     <div class="mbody">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
@@ -1502,7 +1582,7 @@ window.exportExcel=function(){
 };
 
 // ── NAVEGAÇÃO ────────────────────────────────────────────────────
-var PT={dashboard:'DASHBOARD',clientes:'CLIENTES',vendas:'VENDAS',estoque:'ESTOQUE',acessorios:'ACESSÓRIOS',pipeline:'PIPELINE DE VENDAS',followup:'PÓS-VENDA'};
+var PT={dashboard:'DASHBOARD',clientes:'CLIENTES',vendas:'VENDAS',estoque:'ESTOQUE',acessorios:'ACESSÓRIOS',pipeline:'PIPELINE DE VENDAS',followup:'PÓS-VENDA',config:'CONFIGURAÇÕES'};
 function navTo(id){
   curPage=id;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
@@ -1516,6 +1596,7 @@ function navTo(id){
   if(id==='acessorios')renderA(filtA);
   if(id==='pipeline')renderPipeline();
   if(id==='followup')renderFU(filtFU);
+  if(id==='config')renderConfigPage();
 }
 window.navTo=navTo;
 
@@ -2624,44 +2705,7 @@ window.abrirCalc = function() {
   document.getElementById('mm-calc').classList.add('open');
   calcPreco();
 };
-window.calcPreco = function() {
-  var custo   = parseFloat(document.getElementById('calc-custo').value)  || 0;
-  var margem  = parseFloat(document.getElementById('calc-margem').value) || 20;
-  var taxaCC  = parseFloat(document.getElementById('calc-taxa-cc').value)  || 2.99;
-  var taxaPIX = parseFloat(document.getElementById('calc-taxa-pix').value) || 0.99;
-  var res = document.getElementById('calc-result');
-  if (!custo) { res.innerHTML = '<div style="font-size:10px;color:var(--mu);text-align:center;padding:10px">Preencha o custo para ver os preços sugeridos</div>'; return; }
 
-  function precoFinal(custo, margemPct, taxaPct) {
-    // preco = custo / (1 - taxa/100) / (1 - margem/100)
-    return custo / ((1 - taxaPct/100) * (1 - margemPct/100));
-  }
-
-  var pPIX = precoFinal(custo, margem, taxaPIX);
-  var pCC1 = precoFinal(custo, margem, taxaCC);
-  // Parcelado: taxa aumenta por parcela (approximate)
-  var parcelas = [2,3,4,5,6,10,12];
-
-  var html = '<div style="margin-bottom:10px"><div style="font-size:9px;letter-spacing:2px;color:var(--mu);margin-bottom:8px">PREÇO SUGERIDO POR FORMA DE PAGAMENTO</div>';
-  html += '<div class="calc-row"><span class="calc-label">PIX / Dinheiro</span><span class="calc-val best">'+R(pPIX)+'</span><span style="font-size:9px;color:var(--gn)">Lucro: '+R(pPIX-custo)+'</span></div>';
-  html += '<div class="calc-row"><span class="calc-label">Cartão 1x (débito)</span><span class="calc-val ok">'+R(pCC1)+'</span><span style="font-size:9px;color:var(--ac2)">Lucro: '+R(pCC1-custo)+'</span></div>';
-
-  parcelas.forEach(function(n) {
-    var taxaTotal = taxaCC + (n-1) * 0.8; // approx taxa acumulada
-    var p = precoFinal(custo, margem, taxaTotal);
-    var lucro = p - custo;
-    var cls = lucro > custo*margem/100*0.9 ? 'ok' : lucro > 0 ? 'warn' : 'bad';
-    html += '<div class="calc-row"><span class="calc-label">Cartão '+n+'x ('+R(p/n)+'/mês)</span><span class="calc-val '+cls+'">'+R(p)+'</span><span style="font-size:9px;color:var(--mu)">Lucro: '+R(lucro)+'</span></div>';
-  });
-
-  html += '</div>';
-  html += '<div style="background:var(--ac3);border:1px solid var(--ac);border-radius:7px;padding:9px 12px;font-size:10px;color:var(--ac2);margin-top:8px">';
-  html += '💡 Custo: <strong>'+R(custo)+'</strong> · Margem desejada: <strong>'+margem+'%</strong> · Preço mínimo (PIX): <strong>'+R(pPIX)+'</strong></div>';
-  res.innerHTML = html;
-};
-
-// ── RELATÓRIO DE LUCRO POR CATEGORIA ────────────────────────────
-var _relFiltro = 'todos';
 window.abrirRelatorio = function() {
   document.getElementById('mm-relatorio').classList.add('open');
   renderRelatorio();
@@ -2816,6 +2860,330 @@ window.marcarTodasLidas = function() {
 
 // Hook into atualizar to refresh notifications
 var _origAtualizar = window.atualizar || function(){};
+
+// ══════════════════════════════════════════════════════════════════
+// TAXAS PAGBANK — Dados reais das imagens
+// ══════════════════════════════════════════════════════════════════
+var TAXAS_KEY = 'nx_taxas_maquina';
+var LOJA_KEY  = 'nx_loja_info';
+
+var TAXAS_DEFAULT = {
+  visa: {
+    nome: 'Visa',
+    debito:    2.39,
+    credito1x: 3.40,
+    credito_2_6:  { taxa_base: 2.30, taxa_mes: 1.66 },
+    credito_7_12: { taxa_base: 2.70, taxa_mes: 1.66 },
+    credito_13_18:{ taxa_base: 3.20, taxa_mes: 1.66 }
+  },
+  master: {
+    nome: 'Mastercard',
+    debito:    2.39,
+    credito1x: 3.40,
+    credito_2_6:  { taxa_base: 2.30, taxa_mes: 1.66 },
+    credito_7_12: { taxa_base: 2.70, taxa_mes: 1.66 },
+    credito_13_18:{ taxa_base: 3.20, taxa_mes: 1.66 }
+  },
+  elo: {
+    nome: 'Elo',
+    debito:    2.39,
+    credito1x: 4.99,
+    credito_2_6:  { taxa_base: 3.99, taxa_mes: 1.66 },
+    credito_7_12: { taxa_base: 3.99, taxa_mes: 1.66 },
+    credito_13_18:{ taxa_base: 3.99, taxa_mes: 1.66 }
+  },
+  hipercard: {
+    nome: 'Hipercard',
+    debito:    4.99,
+    credito1x: 4.99,
+    credito_2_6:  { taxa_base: 3.99, taxa_mes: 1.66 },
+    credito_7_12: { taxa_base: 3.99, taxa_mes: 1.66 },
+    credito_13_18:{ taxa_base: 3.99, taxa_mes: 1.66 }
+  }
+};
+
+function getTaxas() {
+  try { var v=localStorage.getItem(TAXAS_KEY); return v?JSON.parse(v):JSON.parse(JSON.stringify(TAXAS_DEFAULT)); }
+  catch(e){ return JSON.parse(JSON.stringify(TAXAS_DEFAULT)); }
+}
+function setTaxas(t){ localStorage.setItem(TAXAS_KEY, JSON.stringify(t)); }
+
+function getLoja() {
+  try { var v=localStorage.getItem(LOJA_KEY); return v?JSON.parse(v):{nome:'Nexum Place',tel:'',email:'nexumplace@gmail.com',end:'República Argentina, 1160, Sala 1107, Curitiba-PR',insta:'@nexumplace',obs:'Conectando você com o seu objetivo'}; }
+  catch(e){ return {nome:'Nexum Place',tel:'',email:'',end:'',insta:'',obs:''}; }
+}
+function setLoja(l){ localStorage.setItem(LOJA_KEY, JSON.stringify(l)); }
+
+// ── CALCULADORA MELHORADA ────────────────────────────────────────
+var _calcBandeira = 'visa';
+
+window.abrirCalc = function() {
+  renderCalcBandeiras();
+  calcPreco();
+  document.getElementById('mm-calc').classList.add('open');
+};
+
+function renderCalcBandeiras() {
+  var taxas = getTaxas();
+  var el = document.getElementById('calc-bandeiras');
+  if(!el) return;
+  el.innerHTML = '';
+  Object.entries(taxas).forEach(function(entry){
+    var key=entry[0], t=entry[1];
+    var btn=document.createElement('button');
+    btn.className='band-btn'+(key===_calcBandeira?' on':'');
+    btn.textContent=t.nome;
+    btn.onclick=function(){ _calcBandeira=key; renderCalcBandeiras(); calcPreco(); };
+    el.appendChild(btn);
+  });
+}
+
+window.calcPreco = function() {
+  var custo  = parseFloat(document.getElementById('calc-custo').value)||0;
+  var margem = parseFloat(document.getElementById('calc-margem').value)||20;
+  var res    = document.getElementById('calc-result');
+  var taxas  = getTaxas();
+  var t      = taxas[_calcBandeira];
+  if(!t){ res.innerHTML='<div style="font-size:10px;color:var(--mu);text-align:center;padding:10px">Bandeira não encontrada</div>'; return; }
+  if(!custo){ res.innerHTML='<div style="font-size:10px;color:var(--mu);text-align:center;padding:10px">Preencha o custo do produto</div>'; return; }
+
+  function precoFinal(custo, margemPct, taxaPct){
+    return custo / ((1-taxaPct/100)*(1-margemPct/100));
+  }
+  function precoParcelado(custo, margemPct, taxaBase, taxaMes, parcelas){
+    var taxaTotal = taxaBase + (parcelas-1)*taxaMes;
+    return precoFinal(custo, margemPct, taxaTotal);
+  }
+
+  var html = '<div class="calc-section-title">Débito</div>';
+  var pDeb = precoFinal(custo, margem, t.debito);
+  html += '<div class="calc-row"><span class="calc-label">Débito ('+t.debito+'%)</span><span class="calc-val ok">'+R(pDeb)+'</span><span style="font-size:9px;color:var(--ac2)">Lucro: '+R(pDeb-custo)+'</span></div>';
+
+  html += '<div class="calc-section-title">Crédito</div>';
+  var p1x = precoFinal(custo, margem, t.credito1x);
+  html += '<div class="calc-row"><span class="calc-label">À vista ('+t.credito1x+'%)</span><span class="calc-val best">'+R(p1x)+'</span><span style="font-size:9px;color:var(--gn)">Lucro: '+R(p1x-custo)+'</span></div>';
+
+  // 2x-6x
+  if(t.credito_2_6){
+    html += '<div class="calc-section-title">Parcelado 2x – 6x (base '+t.credito_2_6.taxa_base+'% + '+t.credito_2_6.taxa_mes+'%/parcela)</div>';
+    for(var n=2; n<=6; n++){
+      var p=precoParcelado(custo,margem,t.credito_2_6.taxa_base,t.credito_2_6.taxa_mes,n);
+      var l=p-custo;
+      html+='<div class="calc-row"><span class="calc-label">'+n+'x ('+R(p/n)+'/mês)</span><span class="calc-val '+(l>0?'ok':'bad')+'">'+R(p)+'</span><span style="font-size:9px;color:var(--mu)">Lucro: '+R(l)+'</span></div>';
+    }
+  }
+  // 7x-12x
+  if(t.credito_7_12){
+    html += '<div class="calc-section-title">Parcelado 7x – 12x (base '+t.credito_7_12.taxa_base+'% + '+t.credito_7_12.taxa_mes+'%/parcela)</div>';
+    for(var n=7; n<=12; n++){
+      var p=precoParcelado(custo,margem,t.credito_7_12.taxa_base,t.credito_7_12.taxa_mes,n);
+      var l=p-custo;
+      html+='<div class="calc-row"><span class="calc-label">'+n+'x ('+R(p/n)+'/mês)</span><span class="calc-val '+(l>0?'warn':'bad')+'">'+R(p)+'</span><span style="font-size:9px;color:var(--mu)">Lucro: '+R(l)+'</span></div>';
+    }
+  }
+  // 13x-18x
+  if(t.credito_13_18){
+    html += '<div class="calc-section-title">Parcelado 13x – 18x (base '+t.credito_13_18.taxa_base+'% + '+t.credito_13_18.taxa_mes+'%/parcela)</div>';
+    for(var n=13; n<=18; n++){
+      var p=precoParcelado(custo,margem,t.credito_13_18.taxa_base,t.credito_13_18.taxa_mes,n);
+      var l=p-custo;
+      html+='<div class="calc-row"><span class="calc-label">'+n+'x ('+R(p/n)+'/mês)</span><span class="calc-val '+(l>0?'warn':'bad')+'">'+R(p)+'</span><span style="font-size:9px;color:var(--mu)">Lucro: '+R(l)+'</span></div>';
+    }
+  }
+
+  html+='<div style="background:var(--ac3);border:1px solid var(--ac);border-radius:7px;padding:9px 12px;font-size:10px;color:var(--ac2);margin-top:10px">'+
+    '💡 Bandeira: <strong>'+t.nome+'</strong> · Custo: <strong>'+R(custo)+'</strong> · Margem: <strong>'+margem+'%</strong></div>';
+  res.innerHTML = html;
+};
+
+// ── EDITAR TAXAS ─────────────────────────────────────────────────
+window.abrirEditarTaxas = function() {
+  var taxas = getTaxas();
+  var form = document.getElementById('taxas-edit-form');
+  if(!form) return;
+  var html = '';
+  Object.entries(taxas).forEach(function(entry){
+    var key=entry[0], t=entry[1];
+    html += '<div style="margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--bd)">';
+    html += '<div style="font-family:Syne,sans-serif;font-size:11px;font-weight:700;color:var(--ac2);margin-bottom:8px">'+t.nome+'</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;">';
+    html += '<div class="fgr"><label>Débito (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="debito" type="number" step="0.01" value="'+t.debito+'"></div>';
+    html += '<div class="fgr"><label>Crédito 1x (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="credito1x" type="number" step="0.01" value="'+t.credito1x+'"></div>';
+    if(t.credito_2_6){
+      html += '<div class="fgr"><label>2x-6x base (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="c26base" type="number" step="0.01" value="'+t.credito_2_6.taxa_base+'"></div>';
+      html += '<div class="fgr"><label>2x-6x /mês (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="c26mes" type="number" step="0.01" value="'+t.credito_2_6.taxa_mes+'"></div>';
+    }
+    if(t.credito_7_12){
+      html += '<div class="fgr"><label>7x-12x base (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="c712base" type="number" step="0.01" value="'+t.credito_7_12.taxa_base+'"></div>';
+      html += '<div class="fgr"><label>7x-12x /mês (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="c712mes" type="number" step="0.01" value="'+t.credito_7_12.taxa_mes+'"></div>';
+    }
+    if(t.credito_13_18){
+      html += '<div class="fgr"><label>13x-18x base (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="c1318base" type="number" step="0.01" value="'+t.credito_13_18.taxa_base+'"></div>';
+      html += '<div class="fgr"><label>13x-18x /mês (%)</label><input class="taxa-inp" data-key="'+key+'" data-field="c1318mes" type="number" step="0.01" value="'+t.credito_13_18.taxa_mes+'"></div>';
+    }
+    html += '</div></div>';
+  });
+  form.innerHTML = html;
+  document.getElementById('mm-taxas').classList.add('open');
+};
+
+window.salvarTaxas = function() {
+  var taxas = getTaxas();
+  document.querySelectorAll('.taxa-inp').forEach(function(inp){
+    var key=inp.getAttribute('data-key');
+    var field=inp.getAttribute('data-field');
+    var val=parseFloat(inp.value)||0;
+    if(!taxas[key]) return;
+    if(field==='debito')    taxas[key].debito=val;
+    if(field==='credito1x') taxas[key].credito1x=val;
+    if(field==='c26base' && taxas[key].credito_2_6)   taxas[key].credito_2_6.taxa_base=val;
+    if(field==='c26mes'  && taxas[key].credito_2_6)   taxas[key].credito_2_6.taxa_mes=val;
+    if(field==='c712base'&& taxas[key].credito_7_12)  taxas[key].credito_7_12.taxa_base=val;
+    if(field==='c712mes' && taxas[key].credito_7_12)  taxas[key].credito_7_12.taxa_mes=val;
+    if(field==='c1318base'&&taxas[key].credito_13_18) taxas[key].credito_13_18.taxa_base=val;
+    if(field==='c1318mes' &&taxas[key].credito_13_18) taxas[key].credito_13_18.taxa_mes=val;
+  });
+  setTaxas(taxas);
+  document.getElementById('mm-taxas').classList.remove('open');
+  toast('✅ Taxas salvas!');
+  renderConfigPage();
+  calcPreco();
+};
+
+// ── LOJA INFO ────────────────────────────────────────────────────
+window.abrirEditarLoja = function() {
+  var loja = getLoja();
+  document.getElementById('loja-nome').value  = loja.nome||'';
+  document.getElementById('loja-tel').value   = loja.tel||'';
+  document.getElementById('loja-email').value = loja.email||'';
+  document.getElementById('loja-end').value   = loja.end||'';
+  document.getElementById('loja-insta').value = loja.insta||'';
+  document.getElementById('loja-obs').value   = loja.obs||'';
+  document.getElementById('mm-loja').classList.add('open');
+};
+window.salvarLoja = function() {
+  setLoja({
+    nome:  document.getElementById('loja-nome').value.trim(),
+    tel:   document.getElementById('loja-tel').value.trim(),
+    email: document.getElementById('loja-email').value.trim(),
+    end:   document.getElementById('loja-end').value.trim(),
+    insta: document.getElementById('loja-insta').value.trim(),
+    obs:   document.getElementById('loja-obs').value.trim()
+  });
+  document.getElementById('mm-loja').classList.remove('open');
+  toast('✅ Informações da loja salvas!');
+  renderConfigPage();
+};
+
+// ── PÁGINA DE CONFIGURAÇÕES ──────────────────────────────────────
+function renderConfigPage() {
+  var loja  = getLoja();
+  var taxas = getTaxas();
+  var metas = JSON.parse(localStorage.getItem('nx_metas')||'{}');
+
+  // Loja
+  var lojaEl = document.getElementById('cfg-loja-body');
+  if(lojaEl) lojaEl.innerHTML =
+    '<div class="cfg-row"><span class="cfg-lbl">Nome</span><span class="cfg-val">'+(loja.nome||'—')+'</span></div>'+
+    '<div class="cfg-row"><span class="cfg-lbl">Telefone</span><span class="cfg-val">'+(loja.tel||'—')+'</span></div>'+
+    '<div class="cfg-row"><span class="cfg-lbl">E-mail</span><span class="cfg-val">'+(loja.email||'—')+'</span></div>'+
+    '<div class="cfg-row"><span class="cfg-lbl">Endereço</span><span class="cfg-val">'+(loja.end||'—')+'</span></div>'+
+    '<div class="cfg-row"><span class="cfg-lbl">Instagram</span><span class="cfg-val">'+(loja.insta||'—')+'</span></div>'+
+    '<div style="margin-top:10px"><button class="btn bgst" style="width:100%" onclick="abrirEditarLoja()">✏️ Editar Informações da Loja</button></div>';
+
+  // Metas
+  var metasEl = document.getElementById('cfg-metas-body');
+  if(metasEl){
+    var ms=metas.semana||{fat:0,luc:0,qtd:0}; var mm=metas.mes||{fat:0,luc:0,qtd:0};
+    metasEl.innerHTML =
+      '<div style="font-size:9px;letter-spacing:1px;color:var(--mu);margin-bottom:6px">SEMANA</div>'+
+      '<div class="cfg-row"><span class="cfg-lbl">Faturamento</span><span class="cfg-val">'+(ms.fat?R(ms.fat):'Não definido')+'</span></div>'+
+      '<div class="cfg-row"><span class="cfg-lbl">Lucro</span><span class="cfg-val">'+(ms.luc?R(ms.luc):'Não definido')+'</span></div>'+
+      '<div class="cfg-row"><span class="cfg-lbl">Qtd vendas</span><span class="cfg-val">'+(ms.qtd||'Não definido')+'</span></div>'+
+      '<div style="font-size:9px;letter-spacing:1px;color:var(--mu);margin:10px 0 6px">MÊS</div>'+
+      '<div class="cfg-row"><span class="cfg-lbl">Faturamento</span><span class="cfg-val">'+(mm.fat?R(mm.fat):'Não definido')+'</span></div>'+
+      '<div class="cfg-row"><span class="cfg-lbl">Lucro</span><span class="cfg-val">'+(mm.luc?R(mm.luc):'Não definido')+'</span></div>'+
+      '<div class="cfg-row"><span class="cfg-lbl">Qtd vendas</span><span class="cfg-val">'+(mm.qtd||'Não definido')+'</span></div>'+
+      '<div style="margin-top:10px;display:flex;gap:6px">'+
+      '<button class="btn bgst bsm" style="flex:1" onclick="abrirMetas(\'semana\')">✏️ Metas da Semana</button>'+
+      '<button class="btn bgst bsm" style="flex:1" onclick="abrirMetas(\'mes\')">✏️ Metas do Mês</button></div>';
+  }
+
+  // Taxas
+  var taxasEl = document.getElementById('cfg-taxas-body');
+  if(taxasEl){
+    var th='';
+    Object.entries(taxas).forEach(function(e){
+      var key=e[0],t=e[1];
+      th+='<div style="margin-bottom:8px"><div style="font-size:10px;font-weight:600;color:var(--ac2);margin-bottom:4px">'+t.nome+'</div>';
+      th+='<div class="cfg-row"><span class="cfg-lbl">Débito</span><span class="cfg-val">'+t.debito+'%</span></div>';
+      th+='<div class="cfg-row"><span class="cfg-lbl">Crédito 1x</span><span class="cfg-val">'+t.credito1x+'%</span></div>';
+      if(t.credito_2_6) th+='<div class="cfg-row"><span class="cfg-lbl">2x–6x</span><span class="cfg-val">'+t.credito_2_6.taxa_base+'% base + '+t.credito_2_6.taxa_mes+'%/mês</span></div>';
+      th+='</div>';
+    });
+    taxasEl.innerHTML = th + '<div style="margin-top:10px"><button class="btn bgst" style="width:100%" onclick="abrirEditarTaxas()">✏️ Editar Todas as Taxas</button></div>';
+  }
+
+  // Categorias
+  var cpEl=document.getElementById('cfg-cats-prod-body');
+  if(cpEl){
+    var cats=getCats('prod');
+    cpEl.innerHTML='<div style="display:flex;flex-wrap:wrap">'+cats.map(function(c){return'<span class="cfg-tag">'+c+'</span>';}).join('')+'</div>';
+  }
+  var caEl=document.getElementById('cfg-cats-acc-body');
+  if(caEl){
+    var catsA=getCats('acc');
+    caEl.innerHTML='<div style="display:flex;flex-wrap:wrap">'+catsA.map(function(c){return'<span class="cfg-tag">'+c+'</span>';}).join('')+'</div>';
+  }
+
+  // Selects list
+  var selEl=document.getElementById('cfg-selects-list');
+  if(selEl){
+    var selects=[
+      {id:'pe-status',label:'Status da Encomenda'},
+      {id:'pc-canal', label:'Canal de Contato'},
+      {id:'pa-local', label:'Local da Venda'},
+      {id:'pa-pag',   label:'Forma de Pagamento (Agenda)'}
+    ];
+    selects.forEach(function(s){
+      var opts=getCfgSel(s.id)||getDefaultOpts(s.id);
+      var div=document.createElement('div');
+      div.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--sf2);border:1px solid var(--bd);border-radius:7px;';
+      div.innerHTML='<div><div style="font-size:11px">'+s.label+'</div><div style="font-size:9px;color:var(--mu)">'+opts.join(' · ')+'</div></div>';
+      var btn=document.createElement('button'); btn.className='btn bgst bsm'; btn.textContent='✏️ Editar';
+      btn.onclick=function(){ abrirCfgSelect(s.id,s.label); };
+      div.appendChild(btn);
+      selEl.appendChild(div);
+    });
+  }
+}
+
+// ── EXCLUIR CLIENTE ──────────────────────────────────────────────
+window.excluirCliente = async function(cid, nome) {
+  if(!cid){ toast('Este cliente não tem registro direto — exclua pela aba de Clientes', true); return; }
+  document.getElementById('conf-m').textContent='Excluir cliente "'+nome+'"? Esta ação não pode ser desfeita.';
+  document.getElementById('conf').classList.add('open');
+  document.getElementById('conf-ok').onclick = async function(){
+    await fbDel('clientes', cid);
+    document.getElementById('conf').classList.remove('open');
+    document.getElementById('vm').classList.remove('open');
+    toast('Cliente excluído!');
+  };
+};
+
+// ── RESET NOTIFICAÇÕES ───────────────────────────────────────────
+window.confirmarResetNotifs = function() {
+  _notifLidas = new Set();
+  localStorage.removeItem('nx_notif_lidas');
+  toast('Notificações limpas!');
+};
+
+
+// excluirClienteView — called from client modal
+window.excluirClienteView = function() {
+  if(!cliAberto) return;
+  excluirCliente(cliAberto.cid||null, cliAberto.nome||'cliente');
+};
 
 iniciar();
 </script>
@@ -3255,17 +3623,60 @@ iniciar();
 
 <!-- ── CALCULADORA MODAL ──────────────────────────────── -->
 <div class="mo" id="mm-calc" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="mbox" style="max-width:520px">
-    <div class="mhead"><div class="mtitle">🧮 Calculadora de Precificação</div><button class="mclose" onclick="document.getElementById('mm-calc').classList.remove('open')">✕</button></div>
+  <div class="mbox" style="max-width:580px">
+    <div class="mhead">
+      <div class="mtitle">🧮 Calculadora de Precificação</div>
+      <div style="display:flex;gap:5px;">
+        <button class="btn bgst bsm" onclick="abrirEditarTaxas()" title="Editar taxas">✏️ Editar Taxas</button>
+        <button class="mclose" onclick="document.getElementById('mm-calc').classList.remove('open')">✕</button>
+      </div>
+    </div>
     <div class="mbody">
-      <div class="calc-grid">
+      <div class="calc-section-title">Selecionar Bandeira</div>
+      <div class="bandeira-sel" id="calc-bandeiras"></div>
+      <div class="calc-section-title">Custo e Margem</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
         <div class="fgr"><label>Custo do produto (R$) *</label><input id="calc-custo" type="number" step="0.01" placeholder="0.00" oninput="calcPreco()"></div>
         <div class="fgr"><label>Margem de lucro desejada (%)</label><input id="calc-margem" type="number" step="0.5" value="20" oninput="calcPreco()"></div>
-        <div class="fgr"><label>Taxa cartão crédito (%)</label><input id="calc-taxa-cc" type="number" step="0.1" value="2.99" oninput="calcPreco()"></div>
-        <div class="fgr"><label>Taxa PIX / débito (%)</label><input id="calc-taxa-pix" type="number" step="0.1" value="0.99" oninput="calcPreco()"></div>
       </div>
       <div class="calc-result" id="calc-result">
-        <div style="font-size:10px;color:var(--mu);text-align:center;padding:10px">Preencha o custo para ver os preços sugeridos</div>
+        <div style="font-size:10px;color:var(--mu);text-align:center;padding:10px">Selecione uma bandeira e preencha o custo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDITAR TAXAS MODAL ─────────────────────────────── -->
+<div class="mo" id="mm-taxas" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox" style="max-width:580px">
+    <div class="mhead"><div class="mtitle">✏️ Editar Taxas da Maquininha</div><button class="mclose" onclick="document.getElementById('mm-taxas').classList.remove('open')">✕</button></div>
+    <div class="mbody">
+      <div style="font-size:10px;color:var(--mu);margin-bottom:12px;line-height:1.6">As taxas ficam salvas no seu navegador. Edite os valores e clique em Salvar.</div>
+      <div id="taxas-edit-form"></div>
+      <div class="fact2">
+        <button class="btn bgst" onclick="document.getElementById('mm-taxas').classList.remove('open')">Cancelar</button>
+        <button class="btn bpri" onclick="salvarTaxas()">💾 Salvar Taxas</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDITAR LOJA MODAL ──────────────────────────────── -->
+<div class="mo" id="mm-loja" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mbox" style="max-width:480px">
+    <div class="mhead"><div class="mtitle">🏪 Informações da Loja</div><button class="mclose" onclick="document.getElementById('mm-loja').classList.remove('open')">✕</button></div>
+    <div class="mbody">
+      <div class="fg">
+        <div class="fgr full"><label>Nome da loja</label><input id="loja-nome" placeholder="Ex: Nexum Place"></div>
+        <div class="fgr"><label>WhatsApp / Telefone</label><input id="loja-tel" placeholder="41 9 9999-9999"></div>
+        <div class="fgr"><label>E-mail</label><input id="loja-email" placeholder="email@loja.com"></div>
+        <div class="fgr full"><label>Endereço</label><input id="loja-end" placeholder="Rua, número, bairro, cidade"></div>
+        <div class="fgr full"><label>Instagram / Redes sociais</label><input id="loja-insta" placeholder="@nexumplace"></div>
+        <div class="fgr full"><label>Observações / Slogan</label><input id="loja-obs" placeholder="Ex: Conectando você com o seu objetivo"></div>
+      </div>
+      <div class="fact2">
+        <button class="btn bgst" onclick="document.getElementById('mm-loja').classList.remove('open')">Cancelar</button>
+        <button class="btn bpri" onclick="salvarLoja()">💾 Salvar</button>
       </div>
     </div>
   </div>
